@@ -108,17 +108,19 @@ public class Pantalla_Veure_Pobles_Comarca_Combo_List extends JFrame implements 
     private void agafarComarques(){
         // Instruccions per a posar en el ComboBox el nom de totes les comarques, millor si és per ordre alfabètic
         // Pots utilitzar el mètode de JComboBox addItem(string)
+        ResultSet rs = null;
         Statement st = null;
         try {
             st = con.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        ResultSet rs = null;
         try {
             rs = st.executeQuery("select nom_c from comarca order by 1");
-            while ()
-            combo.addItem(rs);
+            while (rs.next())
+            combo.addItem(rs.getString(1));
+            rs.close();
+            st.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -131,7 +133,9 @@ public class Pantalla_Veure_Pobles_Comarca_Combo_List extends JFrame implements 
         // La manera d'anar introduint informació en el JList és a través del DefaultListModel:
         // listModel.addElement("Linia que es vol introduir ")
         // Una manera de solucionar el problema de la cometa simple és utilitzar comarca.replaceAll("'","''").
-
+        String sql = "SELECT nom FROM POBLACIONS " +
+                "WHERE nom_c = ' " + comarca.replaceAll("'","''") + " ' order by 1";
+        System.out.println(sql);
     }
 
     private void visualitzaInstituts(String poble){
